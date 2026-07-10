@@ -55,6 +55,12 @@ nav{
   transition:color .2s;
 }
 .nav-links a:hover,.nav-links a:focus-visible{color:var(--pine)}
+.menu-btn{
+  display:none;
+  background:none;border:1px solid var(--line);border-radius:6px;
+  padding:.4rem .6rem;cursor:pointer;color:var(--ink);
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;
+}
 a:focus-visible,button:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
 
 header.hero{
@@ -213,8 +219,19 @@ footer a{color:var(--pine);text-decoration:none}
   header.hero{grid-template-columns:1fr;padding-top:4rem}
   .portrait{justify-self:start}
   .about-grid{grid-template-columns:1fr}
-  .nav-links{gap:1rem}
-  .nav-links li:nth-child(n+4){display:none}
+  .menu-btn{display:block}
+  .nav-links{
+    display:none;
+    position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;gap:0;
+    background:rgba(244,246,244,.97);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:.4rem 0;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{display:block;padding:.85rem 1.5rem}
+  .nav-links li + li{border-top:1px solid var(--line)}
 }
 </style>
 </head>
@@ -223,11 +240,13 @@ footer a{color:var(--pine);text-decoration:none}
 <nav>
   <div class="nav-inner">
     <a class="logo" href="#top">Amit<em>Ojha</em></a>
-    <ul class="nav-links">
+    <button class="menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+    <ul class="nav-links" id="nav-menu">
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Journey</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
@@ -322,12 +341,6 @@ footer a{color:var(--pine);text-decoration:none}
       </ul>
       <p class="stack">Java 8 · Spring Boot · MySQL · Liquibase · REST APIs</p>
     </div>
-    <div class="entry reveal">
-      <p class="year">2016 — 2020</p>
-      <h3>B.Tech, Computer Science Engineering</h3>
-      <p class="where">GLA University · Mathura, India</p>
-      <p>Graduated with 75.4%. Earned the Microsoft Technology Associate (MTA) certification in Python and competed in CodeChef global programming competitions.</p>
-    </div>
   </div>
 </section>
 
@@ -416,10 +429,43 @@ footer a{color:var(--pine);text-decoration:none}
   </div>
 </section>
 
+<!-- ================= EDUCATION ================= -->
+<section id="education">
+  <div class="section-head reveal">
+    <p class="kicker">05 · Education</p>
+    <h2>Education &amp; certifications</h2>
+  </div>
+  <div class="timeline">
+    <div class="entry reveal">
+      <p class="year">2016 — 2020</p>
+      <h3>B.Tech, Computer Science Engineering</h3>
+      <p class="where">GLA University · Mathura, Uttar Pradesh, India</p>
+      <p>Graduated with 75.4%.</p>
+    </div>
+    <div class="entry reveal">
+      <p class="year">2015 — 2016</p>
+      <h3>Intermediate</h3>
+      <p class="where">Jugal Devi Saraswati Vidya Mandir · Kanpur, Uttar Pradesh, India</p>
+      <p>Completed with 74.4%.</p>
+    </div>
+    <div class="entry reveal">
+      <p class="year">2013 — 2014</p>
+      <h3>High School</h3>
+      <p class="where">Jugal Devi Saraswati Vidya Mandir · Kanpur, Uttar Pradesh, India</p>
+      <p>Completed with 8.2 CGPA</p>
+    </div>
+    <div class="entry reveal">
+      <p class="year">Certifications</p>
+      <h3>Microsoft Technology Associate (MTA) — Python</h3>
+      <p>Also participated in CodeChef global programming competitions.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ================= CONTACT ================= -->
 <section id="contact">
   <div class="contact reveal">
-    <p class="kicker" style="justify-content:center;color:#E4B072">05 · Say hello</p>
+    <p class="kicker" style="justify-content:center;color:#E4B072">06 · Say hello</p>
     <h2>Let's build something reliable together</h2>
     <p>Whether it's a backend challenge, a role on your team, or just a good engineering conversation — my inbox is open.</p>
     <a class="btn btn-solid" href="mailto:amitojha130399@gmail.com">amitojha130399@gmail.com</a>
@@ -433,13 +479,26 @@ footer a{color:var(--pine);text-decoration:none}
 
 <footer>
   <span>© 2026 Amit Ojha · Made with plain HTML &amp; CSS</span>
-  <span>
+  <!-- <span>
     <a href="https://github.com/Amitojha74">GitHub</a> ·
     <a href="https://linkedin.com/in/amit-ojha-4a3426164">LinkedIn</a>
-  </span>
+  </span> -->
 </footer>
 
 <script>
+const menuBtn = document.querySelector('.menu-btn');
+const navLinks = document.querySelector('.nav-links');
+menuBtn.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', open);
+});
+navLinks.querySelectorAll('a').forEach(a =>
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  })
+);
+
 const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (!prefersReduced && 'IntersectionObserver' in window) {
   const io = new IntersectionObserver(entries => {
